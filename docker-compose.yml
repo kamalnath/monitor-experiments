@@ -1,0 +1,142 @@
+# docker-compose build && docker-compose up -d
+version: "3.2"
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+  metricbeat_data:
+    driver: local
+  kibana_data:
+    driver: local
+
+
+services:
+
+  # Access api endpoint at http://localhost:9200
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
+    #image: elastic_metric:latest
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+
+    environment:
+      - node.name=es01
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.initial_master_nodes=es01,es02
+      - discovery.seed_hosts==es01,es02
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  es02:
+    depends_on:
+      - es01
+    links:
+      - es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    environment:
+      - node.name=es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.initial_master_nodes=es01,es02
+      - discovery.seed_hosts==es01,es02
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  es03:
+    depends_on:
+      - es02
+    links:
+      - es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.2
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    environment:
+      - node.name=es03
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - cluster.initial_master_nodes=es01,es02
+      - discovery.seed_hosts==es01,es02
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  # Access Kibana at http://localhost:5601
+  kib01:
+    container_name: kib01
+    image: docker.elastic.co/kibana/kibana:7.11.2
+    ports:
+      - 5601:5601
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    depends_on:
+      - es01
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: '["http://es01:9200"]'
+
+
+  metricbeat:
+      #build: .
+      # to specify the built image name and version, add "image" config
+      image: mon_poc_metricbeat:latest
+
+      environment:
+        ELASTICSEARCH_HOSTS: http://es01:9200
+      volumes:
+        - metricbeat_data:/usr/share/metricbeat/data
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /proc:/hostfs/proc:ro
+        - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+        - /:/hostfs:ro
+      depends_on:
+        - kib01
+      deploy:
+        restart_policy:
+          condition: on-failure
+          delay: 1200s
+
+
+  apm-server:
+      image: docker.elastic.co/apm/apm-server:7.13.0
+      cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+      cap_drop: ["ALL"]
+      ports:
+      - 8200:8200
+      command: >
+         apm-server -e
+           -E apm-server.rum.enabled=true
+           -E setup.kibana.host=kib01:5601
+           -E setup.template.settings.index.number_of_replicas=0
+           -E apm-server.kibana.enabled=true
+           -E apm-server.kibana.host=kib01:5601
+           -E output.elasticsearch.hosts=["es01:9200"]
+      healthcheck:
+        interval: 10s
+        retries: 12
+        test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://apm-server:8200/
+
+networks:
+  elastic:
+    driver: bridge

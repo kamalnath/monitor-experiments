@@ -1,0 +1,80 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+metricbeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+# enabled modules for monitoring (e.g. elasticsearch-xpack)
+metricbeat.modules:
+- module: elasticsearch
+  xpack.enabled: true
+  metricsets:
+    - node
+    - node_stats
+    - index
+  period: 10s
+  hosts: ["http://es01:9200"]
+  scope: cluster
+- module: docker
+  metricsets:
+    - "container"
+    - "cpu"
+    - "diskio"
+    - "event"
+    - "healthcheck"
+    - "info"
+    #- "image"
+    - "memory"
+    - "network"
+    #- "network_summary"
+  hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
+  enabled: true
+
+- module: kibana
+  metricsets: ["status"]
+  period: 10s
+  hosts: ["kib01:5601"]
+  basepath: ""
+  enabled: true
+  xpack.enabled: true
+- module: system
+  metricsets:
+    - cpu             # CPU usage
+    - load            # CPU load averages
+    - memory          # Memory usage
+    - network         # Network IO
+    - process         # Per process metrics
+    - process_summary # Process summary
+    - uptime          # System Uptime
+    - socket_summary  # Socket summary
+    #- core           # Per CPU core usage
+    #- diskio         # Disk IO
+    #- filesystem     # File system usage for each mountpoint
+    #- fsstat         # File system summary metrics
+    #- raid           # Raid
+    #- socket         # Sockets and connection info (linux only)
+    #- service        # systemd service information
+  enabled: true
+  period: 10s
+  processes: ['.*']
+
+  # Configure the mount point of the host’s filesystem for use in monitoring a host from within a container
+  hostfs: "/hostfs"
+
+  # Configure the metric types that are included by these metricsets.
+  cpu.metrics:  ["percentages","normalized_percentages"]  # The other available option is ticks.
+  core.metrics: ["percentages"]  # The other available option is ticks.
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+output.elasticsearch:
+  hosts: 'http://es01:9200'
+
+setup.kibana.host: "kib01:5601"
+setup.dashboards.enabled: true
