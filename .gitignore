@@ -38,8 +38,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
-nodejs-express-app/node_modules/
+java-app/elasticsearch-with-spring-boot/demo/target/
+**/target/
 **/node_modules/
 jspm_packages/
 

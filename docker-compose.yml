@@ -117,7 +117,6 @@ services:
           condition: on-failure
           delay: 1200s
 
-
   apm-server:
       image: docker.elastic.co/apm/apm-server:7.13.0
       cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
@@ -136,6 +135,16 @@ services:
         interval: 10s
         retries: 12
         test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://apm-server:8200/
+  web-app:
+      image: node-app:latest
+      depends_on:
+        - apm-server
+      ports:
+            - 3000:3000
+      deploy:
+        restart_policy:
+          condition: on-failure
+          delay: 1200s
 
 networks:
   elastic:

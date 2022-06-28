@@ -1,12 +1,11 @@
 const apm = require('elastic-apm-node').start({
 
-  // Use if APM Server requires a secret token
       secretToken: '',
       logLevel:"debug",
       captureBody: 'all',
       active: true,
       usePathAsTransactionName: true,
-      serverUrl: 'http://localhost:8200',// Set custom APM Server URL
+      serverUrl: 'http://apm-server:8200',// Set custom APM Server URL
       environment: 'production'
 })
 
