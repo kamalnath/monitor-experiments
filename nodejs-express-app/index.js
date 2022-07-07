@@ -1,3 +1,4 @@
+require('newrelic');
 const apm = require('elastic-apm-node').start({
 
       secretToken: '',

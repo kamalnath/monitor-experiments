@@ -12,6 +12,8 @@ volumes:
     driver: local
   kibana_data:
     driver: local
+  file-beat_data:
+    driver: local
 
 
 services:
@@ -90,6 +92,7 @@ services:
       - 5601:5601
     volumes:
       - kibana_data:/usr/share/kibana/data
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - es01
     environment:
@@ -135,6 +138,22 @@ services:
         interval: 10s
         retries: 12
         test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://apm-server:8200/
+
+  file-beat:
+    image: docker.elastic.co/beats/filebeat:8.3.1
+    user: root
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - file-beat_data:/usr/share/file-beat/data
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 1200s
+
   web-app:
       image: node-app:latest
       depends_on:

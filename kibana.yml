@@ -1,0 +1,5 @@
+server.name: kib01
+server.host: "0"
+elasticsearch.hosts: [ "http://es01:9200" ]
+monitoring.ui.container.elasticsearch.enabled: true
+xpack.encryptedSavedObjects.encryptionKey: "min-32-byte-long-strong-encryption-key-kamal"
