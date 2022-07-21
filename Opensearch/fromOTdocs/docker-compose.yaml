@@ -1,0 +1,74 @@
+version: "3"
+services:
+  # Collector
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.53.0
+#    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/conf/collector-config.yaml"]
+    volumes:
+      - ./collector-config.yaml:/conf/collector-config.yaml
+    ports:
+      - "9464:9464"
+      - "4317:4317"
+      - "4318:4318"
+    depends_on:
+      - zipkin-all-in-one
+    networks:
+      - my_network
+  # Zipkin
+  zipkin-all-in-one:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    networks:
+      - my_network
+  data-prepper:
+    restart: unless-stopped
+    container_name: data-prepper
+    image: opensearchproject/data-prepper:latest
+    volumes:
+      - ./trace_analytics_no_ssl.yml:/usr/share/data-prepper/pipelines.yaml
+      - ./data-prepper-config.yaml:/usr/share/data-prepper/data-prepper-config.yaml
+      - ../demo/root-ca.pem:/usr/share/data-prepper/root-ca.pem
+    ports:
+      - "21890:21890"
+    networks:
+      - my_network
+    depends_on:
+      - "opensearch"
+
+  opensearch:
+    container_name: node-0.example.com
+    image: opensearchproject/opensearch:latest
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+        hard: 65536
+    ports:
+      - 9200:9200
+      - 9600:9600 # required for Performance Analyzer
+    networks:
+      - my_network
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      OPENSEARCH_HOSTS: '["https://node-0.example.com:9200"]'
+    depends_on:
+      - opensearch
+    networks:
+      - my_network
+networks:
+  my_network:

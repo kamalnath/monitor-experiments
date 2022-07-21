@@ -1,0 +1,31 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+        cors:
+          allowed_origins:
+            - http://*
+            - https://*
+
+exporters:
+  zipkin:
+    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+  otlp/2:
+    endpoint: data-prepper:21890
+    tls:
+      insecure: true
+      insecure_skip_verify: true
+
+processors:
+  batch:
+
+service:
+  telemetry:
+    logs:
+      level: "debug"
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [zipkin,otlp/2]
+      processors: [batch]
