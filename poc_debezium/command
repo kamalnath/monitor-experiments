@@ -25,10 +25,8 @@ curl -i http://localhost:8083/connectors/arctype-connector/status
 insert into test_not_copied (name) values ('test_not_copied changes should not be in Kafka Test!');
 insert into deb_copy (name) values ('deb_copy should be in Kafka Test!');
 
-
-
-docker exec -it   poc_debezium_kafka_1 /kafka/bin/kafka-console-consumer.sh \
- --bootstrap-server kafka:9092 \
- --from-beginning \
- --property print.key=true \
- --topic data.cdc.dbname
+pip install kafka-python
+from kafka import KafkaConsumer
+consumer = KafkaConsumer('ARCTYPE.public.deb_copy',bootstrap_servers='localhost:29092')
+for msg in consumer:
+   print (msg)
