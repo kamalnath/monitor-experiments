@@ -1,6 +1,30 @@
+psql -h 127.0.0.1 -U postgres
+
+
+create table deb_copy (
+id serial primary key,
+name varchar
+);
+
+create table test_not_copied (
+id serial primary key,
+name varchar
+);
+
+
 alter system set wal_level to 'logical';
-ALTER TABLE test REPLICA IDENTITY FULL;
+ALTER TABLE deb_copy REPLICA IDENTITY FULL;
+ALTER TABLE test_not_copied REPLICA IDENTITY FULL;
+
+docker container stop poc_debezium_db_1
+docker container start poc_debezium_db_1
+
+curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json"  127.0.0.1:8083/connectors/ --data "@debezium.json"
 curl -i http://localhost:8083/connectors/arctype-connector/status
+
+insert into test_not_copied (name) values ('test_not_copied changes should not be in Kafka Test!');
+insert into deb_copy (name) values ('deb_copy should be in Kafka Test!');
+
 
 
 docker exec -it   poc_debezium_kafka_1 /kafka/bin/kafka-console-consumer.sh \

@@ -10,7 +10,7 @@
         "database.password": "arctype",
         "database.dbname": "postgres",
         "database.server.name": "ARCTYPE",
-        "table.include.list": "public.(.*)",
+        "table.include.list": "public.deb_copy",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
