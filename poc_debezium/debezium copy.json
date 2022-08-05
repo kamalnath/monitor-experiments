@@ -4,13 +4,13 @@
         "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
         "tasks.max": "1",
         "plugin.name": "pgoutput",
-        "database.hostname": "db-wn-dev.cedg7brpxwb5.eu-west-1.rds.amazonaws.com",
-        "database.port": "65432",
-        "database.user": "wingspan",
-        "database.password": "9yv9SWGfawc7badtRqXEMfWM9csScPRzBGVNLTT4hCqTPG4zSDs7wCAhJeTrCMyM",
-        "database.dbname": "wingspan",
-        "database.server.name": "wingspan",
-        "table.include.list": "wingspan.deb_copy",
+        "database.hostname": "db",
+        "database.port": "5432",
+        "database.user": "postgres",
+        "database.password": "arctype",
+        "database.dbname": "postgres",
+        "database.server.name": "ARCTYPE",
+        "table.include.list": "public.deb_copy",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
@@ -18,6 +18,6 @@
         "value.converter.schemas.enable": "false",
         "slot.name": "dbname_debezium",
         "publication.name": "dbname_publication",
-        "snapshot.mode": "initial"
+        "snapshot.mode": "always"
     }
 }
