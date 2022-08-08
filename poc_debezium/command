@@ -22,6 +22,8 @@ docker container start poc_debezium_db_1
 curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json"  127.0.0.1:8083/connectors/ --data "@debezium.json"
 curl -i http://localhost:8083/connectors/arctype-connector/status
 
+curl -X DELETE http://localhost:8083/connectors/arctype-connector
+
 insert into test_not_copied (name) values ('test_not_copied changes should not be in Kafka Test!');
 insert into deb_copy (name) values ('deb_copy should be in Kafka Test!');
 
