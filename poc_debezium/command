@@ -16,6 +16,9 @@ alter system set wal_level to 'logical';
 ALTER TABLE deb_copy REPLICA IDENTITY FULL;
 ALTER TABLE test_not_copied REPLICA IDENTITY FULL;
 
+grant all privileges on database wingspan to wnadm;
+
+
 docker container stop poc_debezium_db_1
 docker container start poc_debezium_db_1
 
@@ -25,10 +28,18 @@ curl -i http://localhost:8083/connectors/arctype-connector/status
 curl -X DELETE http://localhost:8083/connectors/arctype-connector
 
 insert into test_not_copied (name) values ('test_not_copied changes should not be in Kafka Test!');
-insert into deb_copy (name) values ('deb_copy should be in Kafka Test!');
+insert into deb_copy (name,dept) values ('kamal','eta');
 
 pip install kafka-python
 from kafka import KafkaConsumer
-consumer = KafkaConsumer('ARCTYPE.public.deb_copy',bootstrap_servers='localhost:29092')
+consumer = KafkaConsumer('wingspan.wingspan.deb_copy',bootstrap_servers='localhost:29092')
 for msg in consumer:
    print (msg)
+
+import kafka
+admin_client = kafka.KafkaAdminClient(bootstrap_servers=['10.245.177.17:9092'])
+admin_client.list_topics()
+topic_list = []
+topic_list.append(NewTopic(name="wingspan.wingspan.deb_copy", num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name="__debezium-heartbeat.wingspan", num_partitions=1, replication_factor=1))
+admin_client.create_topics(new_topics=topic_list, validate_only=False)

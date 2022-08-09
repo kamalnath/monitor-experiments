@@ -2,7 +2,7 @@
     "name": "arctype-connector",
     "config": {
         "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
-        "tasks.max": "1",
+        "tasks.max": "2",
         "plugin.name": "pgoutput",
         "database.hostname": "db-wn-dev.cedg7brpxwb5.eu-west-1.rds.amazonaws.com",
         "database.port": "65432",
