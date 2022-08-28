@@ -16,8 +16,8 @@
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
         "key.converter.schemas.enable": "false",
         "value.converter.schemas.enable": "false",
-        "slot.name": "dbname_debezium",
-        "publication.name": "dbname_publication",
+        "slot.name": "dbname_debezium_pid_slot",
+        "publication.name": "dbname_publication_pid_publication",
         "snapshot.mode": "initial"
     }
 }
