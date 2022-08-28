@@ -10,7 +10,7 @@
         "database.password": "J0md4sIUfqNnNWs2p11f",
         "database.dbname": "pid",
         "database.server.name": "pid",
-        "table.include.list": "public.deb_copy,",
+        "table.include.list": "public.deb_copy,public.wingspan_user,public.user_profile,public.user_preferences,public.dealer",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
