@@ -6,7 +6,7 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - BOOTSTRAP_SERVERS=kafka:9092
+      - BOOTSTRAP_SERVERS=10.245.177.17:9092
       - GROUP_ID=1
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
@@ -15,28 +15,5 @@ services:
       - CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR:1
       - CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR:1
       - CONNECT_STATUS_STORAGE_REPLICATION_FACTOR:1
-      - KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS:1
-
-  kafka:
-    image: debezium/kafka
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-    depends_on:
-      - zookeeper
-    environment:
-      - ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_ADVERTISED_LISTENERS=LISTENER_EXT://localhost:29092,LISTENER_INT://kafka:9092
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_INT:PLAINTEXT,LISTENER_EXT:PLAINTEXT
-      - KAFKA_LISTENERS=LISTENER_INT://0.0.0.0:9092,LISTENER_EXT://0.0.0.0:29092
-      - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INT
-
-  zookeeper:
-    image: debezium/zookeeper
-    ports:
-      - "2181:2181"
-      - "2888:2888"
-      - "3888:3888"
-
-      
+      - KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS:1      
 
