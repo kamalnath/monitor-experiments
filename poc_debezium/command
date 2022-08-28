@@ -14,6 +14,9 @@ name varchar
 
 alter system set wal_level to 'logical';
 ALTER TABLE deb_copy REPLICA IDENTITY FULL;
+
+ALTER TABLE wingspan_user REPLICA IDENTITY FULL;
+
 ALTER TABLE test_not_copied REPLICA IDENTITY FULL;
 
 grant all privileges on database wingspan to wnadm;
@@ -49,11 +52,7 @@ import kafka
 admin_client = kafka.KafkaAdminClient(bootstrap_servers=['10.245.177.17:9092'])
 admin_client.list_topics()
 	
-dev environment
-
-	-: RDS #done
-	-: columns  #done
-	-: cluster of connect. #TODO
+--------------------------------------------------------------------------------------
 
 import youtube_dl
 
