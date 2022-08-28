@@ -9,7 +9,7 @@
         "database.user": "wnadm",
         "database.password": "J0md4sIUfqNnNWs2p11f",
         "database.dbname": "pid",
-        "database.server.name": "servername",
+        "database.server.name": "pid",
         "table.include.list": "wingspan_user",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
