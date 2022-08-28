@@ -10,7 +10,7 @@
         "database.password": "J0md4sIUfqNnNWs2p11f",
         "database.dbname": "pid",
         "database.server.name": "pid",
-        "table.include.list": "pid.wingspan_user",
+        "table.include.list": "pid.deb_copy",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
