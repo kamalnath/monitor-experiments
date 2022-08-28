@@ -31,7 +31,7 @@ services:
       - KAFKA_LISTENERS=LISTENER_INT://0.0.0.0:9092,LISTENER_EXT://0.0.0.0:29092
       - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INT
 
-    zookeeper:
+  zookeeper:
     image: debezium/zookeeper
     ports:
       - "2181:2181"
