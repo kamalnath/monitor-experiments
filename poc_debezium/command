@@ -49,7 +49,7 @@ import kafka
 from kafka.admin import KafkaAdminClient, NewTopic
 admin_client = kafka.KafkaAdminClient(bootstrap_servers=['10.245.177.17:9092'])
 topic_list = []
-topic_list.append(NewTopic(name="pid.pid.deb_copy", num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name="pid.public.deb_copy", num_partitions=1, replication_factor=1))
 admin_client.create_topics(new_topics=topic_list, validate_only=False)
 
 topic_list.append(NewTopic(name="wingspan.pid.wingspan_user", num_partitions=1, replication_factor=1))
