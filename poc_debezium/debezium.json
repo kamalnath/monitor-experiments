@@ -8,15 +8,15 @@
         "database.port": "65432",
         "database.user": "wnadm",
         "database.password": "J0md4sIUfqNnNWs2p11f",
-        "database.dbname": "wingspan",
+        "database.dbname": "pid",
         "database.server.name": "wingspan",
-        "table.include.list": "wingspan.deb_copy,pid.wingspan_user",
+        "table.include.list": "pid.wingspan_user",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
         "key.converter.schemas.enable": "false",
         "value.converter.schemas.enable": "false",
-        "slot.name": "dbname_debezium",
+        "slot.name": "dbname_debezium_slot_pid",
         "publication.name": "dbname_publication_pid_publication",
         "snapshot.mode": "initial"
     }
