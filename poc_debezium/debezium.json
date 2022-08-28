@@ -10,7 +10,7 @@
         "database.password": "J0md4sIUfqNnNWs2p11f",
         "database.dbname": "wingspan",
         "database.server.name": "wingspan",
-        "table.include.list": "pid.wingspan_user",
+        "table.include.list": "wingspan.deb_copy,pid.wingspan_user",
         "heartbeat.interval.ms": "5000",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
