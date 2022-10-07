@@ -1,8 +1,7 @@
 version: '3'
 services:
   app:
-    #build: ./
-    image : javaagent_app
+    build: ./
     environment:
       OTEL_SERVICE_NAME: "agent-example-app"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
@@ -10,5 +9,14 @@ services:
       OTEL_LOGS_EXPORTER: "otlp"
     ports:
       - "8080:8080"
-
-
+    depends_on:
+      - collector
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.51.0
+    volumes:
+      - ./otel-config.yaml:/otel-config.yaml
+    command: ["--config=/otel-config.yaml"]
+    expose:
+      - "4317"
+    ports:
+      - "4317:4317"
