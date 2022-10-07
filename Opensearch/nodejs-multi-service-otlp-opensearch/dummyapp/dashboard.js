@@ -15,6 +15,10 @@ app.get('/dashboard', async (req, res) => {
   const movies = await getUrlContents('http://localhost:3000/movies', require('node-fetch'))
   res.type('json')
   res.send(JSON.stringify({ dashboard: movies }))
+
+  const javaapp = await getUrlContents('http://localhost:8080/ping', require('node-fetch'))
+  res.type('json')
+  res.send(JSON.stringify({ dashboard: javaapp }))
 })
 
 app.listen(port, () => { console.log(`Listening at http://localhost:${port}`)})
