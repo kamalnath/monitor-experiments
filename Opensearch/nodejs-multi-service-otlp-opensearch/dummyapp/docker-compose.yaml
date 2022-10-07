@@ -14,11 +14,22 @@ services:
       - "9464:9464"
       - "4317:4317"
       - "4318:4318"
-
     depends_on:
       - zipkin-all-in-one
     networks:
       - my_network
+  
+  app:
+    #build: ./
+    image : javaagent_app
+    environment:
+      OTEL_SERVICE_NAME: "agent-example-app"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
+      # Logs are disabled by default
+      OTEL_LOGS_EXPORTER: "otlp"
+    ports:
+      - "8080:8080"
+
   # Zipkin
   zipkin-all-in-one:
     image: openzipkin/zipkin:latest
