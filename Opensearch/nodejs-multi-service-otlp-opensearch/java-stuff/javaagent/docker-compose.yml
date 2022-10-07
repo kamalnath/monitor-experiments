@@ -4,7 +4,7 @@ services:
     build: ./
     environment:
       OTEL_SERVICE_NAME: "agent-example-app"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4319"
       # Logs are disabled by default
       OTEL_LOGS_EXPORTER: "otlp"
     ports:
@@ -17,6 +17,6 @@ services:
       - ./otel-config.yaml:/otel-config.yaml
     command: ["--config=/otel-config.yaml"]
     expose:
-      - "4317"
+      - "4319"
     ports:
-      - "4317:4317"
+      - "4319:4319"

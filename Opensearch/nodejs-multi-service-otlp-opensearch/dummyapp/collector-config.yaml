@@ -7,7 +7,7 @@ receivers:
           allowed_origins:
             - http://*
             - https://*
-
+ 
 exporters:
   zipkin:
     endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
@@ -16,6 +16,8 @@ exporters:
     tls:
       insecure: true
       insecure_skip_verify: true
+  logging:
+    logLevel: DEBUG
 
 processors:
   batch:
@@ -27,5 +29,5 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [zipkin,otlp/2]
+      exporters: [zipkin,otlp/2,logging]
       processors: [batch]
