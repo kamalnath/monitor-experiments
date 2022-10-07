@@ -11,6 +11,8 @@ id serial primary key,
 name varchar
 );
 
+ALTER TABLE deb_copy ADD Email varchar;
+ALTER TABLE deb_copy DROP COLUMN Email;
 
 alter system set wal_level to 'logical';
 ALTER TABLE deb_copy REPLICA IDENTITY FULL;
@@ -33,13 +35,13 @@ curl -X DELETE http://localhost:8083/connectors/arctype-connector
 insert into test_not_copied (name) values ('test_not_copied changes should not be in Kafka Test!');
 insert into deb_copy (name) values ('kamal');
 
-pip install kafka-python
+
 from kafka import KafkaConsumer
 consumer = KafkaConsumer('wingspan.wingspan.deb_copy',bootstrap_servers='10.245.177.17:9092')
 for msg in consumer:
    print (msg)
 
-
+pip install kafka-python
 from kafka import KafkaConsumer
 consumer = KafkaConsumer('pid.pid.wingspan_user',bootstrap_servers='10.245.177.17:9092')
 for msg in consumer:
@@ -52,13 +54,20 @@ topic_list = []
 topic_list.append(NewTopic(name="pid.public.deb_copy", num_partitions=1, replication_factor=1))
 admin_client.create_topics(new_topics=topic_list, validate_only=False)
 
-topic_list.append(NewTopic(name="wingspan.pid.wingspan_user", num_partitions=1, replication_factor=1))
-admin_client.create_topics(new_topics=topic_list, validate_only=False)
+
+topic_list.append(NewTopic(name="pid.public.user_profile", num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name="pid.public.user_preferences", num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name="pid.public.dealer", num_partitions=1, replication_factor=1))
+
+
+
+
 
 import kafka
-admin_client = kafka.KafkaAdminClient(bootstrap_servers=['10.245.176.45:9092'])
+admin_client = kafka.KafkaAdminClient(bootstrap_servers=['10.245.177.17:9092'])
 admin_client.list_topics()
-	
+
+admin_client.delete_topics(topics=['pid.pid.deb_copy'])	
 --------------------------------------------------------------------------------------
 
 import youtube_dl

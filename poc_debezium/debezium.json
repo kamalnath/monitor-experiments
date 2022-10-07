@@ -12,6 +12,7 @@
         "database.server.name": "pid",
         "table.include.list": "public.deb_copy,public.wingspan_user,public.user_profile,public.user_preferences,public.dealer",
         "heartbeat.interval.ms": "5000",
+        "heartbeat.action.query": "update public.debezium_heartbeat SET date_column = now();",
         "key.converter": "org.apache.kafka.connect.json.JsonConverter",
         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
         "key.converter.schemas.enable": "false",

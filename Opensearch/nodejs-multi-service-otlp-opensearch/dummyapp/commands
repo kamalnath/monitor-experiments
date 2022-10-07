@@ -1,0 +1,5 @@
+node --require './tracing.js' dashboard.js
+node --require './tracing-movies.js' movies.js
+
+
+watch -n 3 curl http://localhost:3001/dashboard
