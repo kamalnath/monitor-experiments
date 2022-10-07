@@ -24,12 +24,15 @@ services:
     image : javaagent_app
     environment:
       OTEL_SERVICE_NAME: "agent-example-app"
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dummyapp_collector_1:4317"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
       # Logs are disabled by default
       OTEL_LOGS_EXPORTER: "otlp"
     ports:
       - "8080:8080"
-
+    depends_on:
+      - collector
+    networks:
+      - my_network
   # Zipkin
   zipkin-all-in-one:
     image: openzipkin/zipkin:latest
