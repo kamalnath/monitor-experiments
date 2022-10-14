@@ -9,8 +9,6 @@ receivers:
             - https://*
  
 exporters:
-  zipkin:
-    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
   otlp/2:
     endpoint: data-prepper:21890
     tls:
@@ -29,5 +27,5 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [zipkin,otlp/2,logging]
+      exporters: [otlp/2,logging]
       processors: [batch]
