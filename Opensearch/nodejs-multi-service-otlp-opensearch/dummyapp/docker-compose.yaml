@@ -21,7 +21,7 @@ services:
 
   app:
     #build: ./
-    image: javaagent_app
+    image: petclinic
     environment:
       OTEL_SERVICE_NAME: "agent-example-app"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
