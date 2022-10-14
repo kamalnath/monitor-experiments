@@ -14,9 +14,9 @@ app.get('/dashboard', async (req, res) => {
   //fetch data running from second service
   const movies = await getUrlContents('http://localhost:3000/movies', require('node-fetch'))
   res.type('json')
-  res.send(JSON.stringify({ dashboard: movies }))
+  //res.send(JSON.stringify({ dashboard: movies }))
 
-  const javaapp = await getUrlContents('http://localhost:8080/ping', require('node-fetch'))
+  const javaapp = await getUrlContents('http://localhost:8080/', require('node-fetch'))
   res.type('json')
   res.send(JSON.stringify({ dashboard: javaapp }))
 })
